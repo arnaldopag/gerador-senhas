@@ -1,16 +1,29 @@
 import { StyleSheet, Text, View, TouchableOpacity, Pressable } from "react-native";
+import * as ClipBoard from 'expo-clipboard'
+import useStorage from '../../hooks/useStorage'
+import { assertEasingIsWorklet } from "react-native-reanimated/lib/typescript/reanimated2/animation/util";
 
-export function ModalPassword() {
+export function ModalPassword({ password, handleClose }) {
+
+    const { saveItem } = useStorage();
+
+    async function copyPassword() {
+        await ClipBoard.setStringAsync(password)
+        await saveItem('@pass', password)
+        alert('Senha salva')
+        handleClose()
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.content}>
                 <Text> senha do caralho</Text>
-                <Pressable style={styles.innerPassword}>
-                    <Text style={styles.text}>jesus amado</Text>
+                <Pressable style={styles.innerPassword} onLongPress={copyPassword}>
+                    <Text style={{ color: '#ffff' }}>{password}</Text>
                 </Pressable>
                 <View style={styles.buttonArea}>
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>Voltar</Text>
+                    <TouchableOpacity style={styles.button} onPress={handleClose}>
+                        <Text> Voltar </Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.buttonSave}>
